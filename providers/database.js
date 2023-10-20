@@ -8,32 +8,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const { Sequelize } = require("sequelize");
-let POSTGRESQL_DB_URI = "postgres://fnqemybh:QJAz5LQY3Gl9OKdrUbOYqJaVmJC6FVTA@flora.db.elephantsql.com/fnqemybh";
-const sequelize = new Sequelize(process.env.POSTGRESQL_DB_URI);
-const testDbConnection = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield sequelize.authenticate();
-        console.log("Connection has been established successfully.");
-    }
-    catch (error) {
-        console.error("Unable to connect to the database:", error);
-    }
+const { Sequelize, DataTypes } = require("sequelize");
+let POSTGRESQL_DB_URI = "jdbc:postgresql://localhost:5432/postgres";
+//const sequelize = new Sequelize(POSTGRESQL_DB_URI)
+const sequelize = new Sequelize('postgres', 'postgres', '9530', {
+    host: 'localhost',
+    dialect: 'postgres'
 });
-module.exports = { sq: sequelize, testDbConnection };
-const { sq } = require("../config/db");
-const { DataTypes } = require("sequelize");
-const NFTUser = sq.define("User", {
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        primaryKey: true,
+const User = sequelize.define("user", {
+    name: DataTypes.TEXT,
+    favoriteColor: {
+        type: DataTypes.TEXT,
+        defaultValue: 'green'
     },
-    fullName: {
-        type: DataTypes.STRING,
-    },
+    age: DataTypes.INTEGER,
+    cash: DataTypes.INTEGER
 });
-NFTUser.sync().then(() => {
-    console.log("User Model synced");
-});
-module.exports = NFTUser;
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield sequelize.sync({ force: true });
+    // Code here
+    const jane = User.build({ name: "Jane" });
+    console.log(jane instanceof User); // true
+    console.log(jane.name); // "Jane"
+    yield jane.save();
+    console.log('Jane was saved to the database!');
+}))();
