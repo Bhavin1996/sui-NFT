@@ -1,0 +1,26 @@
+{
+  "name": "sui-nft",
+  "version": "1.0.0",
+  "description": "sneaker nft",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bhavin1996/sui-NFT.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bhavin1996/sui-NFT/issues"
+  },
+  "homepage": "https://github.com/Bhavin1996/sui-NFT#readme",
+  "devDependencies": {
+    "gts": "^5.2.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@mysten/sui.js": "^0.0.0-experimental-20231012213307"
+  }
+}
