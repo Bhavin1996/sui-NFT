@@ -1,28 +1,39 @@
-import createConnectionPool, {sql} from '@databases/pg';
+const { Sequelize } = require("sequelize");
 
-export {sql};
+let POSTGRESQL_DB_URI = "postgres://fnqemybh:QJAz5LQY3Gl9OKdrUbOYqJaVmJC6FVTA@flora.db.elephantsql.com/fnqemybh"
 
-const db = createConnectionPool();
-export default db;
+const sequelize = new Sequelize(process.env.POSTGRESQL_DB_URI)
 
-async function run() {
-  // N.B. you will need to replace this connection
-  // string with the correct string for your database.
-  const db = createConnectionPool(
-    'postgres://test-user@localhost:5432/test-db',
-  );
+const testDbConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+};
 
-  const results = await db.query(sql`
-    SELECT 1 + 1 as result;
-  `);
+module.exports = { sq: sequelize, testDbConnection };
 
-  console.log(results);
-  // => [{result: 2}]
+const { sq } = require("../config/db");
+ 
+ 
+const { DataTypes } = require("sequelize");
 
-  await db.dispose();
-}
+const NFTUser = sq.define("User", {
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    primaryKey: true,
+  },
 
-run().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  fullName: {
+    type: DataTypes.STRING,
+  },
 });
+
+NFTUser.sync().then(() => {
+  console.log("User Model synced");
+});
+
+module.exports = NFTUser;
